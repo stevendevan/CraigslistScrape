@@ -1,9 +1,11 @@
+import time
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 
 import util
+import url_tools
 
 URL_BASE = 'https://losangeles.craigslist.org/search/mcy?s='
 URL_SUFFIX = '&hasPic=1&min_price=800&max_price=2500'
@@ -59,14 +61,21 @@ def main():
     posts = util.load_json_to_dataframe(BIG_FILE)
 
     post_to_start_with = 0
+    url_builder = url_tools.url_builder
+    url_builder.starting_post_num = post_to_start_with
     while True:
-        req = requests.get(URL_BASE + str(post_to_start_with) + URL_SUFFIX)
+        req = requests.get(url_builder.get_url())
         soup = BeautifulSoup(req.text, 'html.parser')
         posts_new = soup.find_all(attrs={'class': 'result-row'})
         if len(posts_new) == 0:
             break
         posts = add_new_posts(posts, posts_new)
+
         post_to_start_with += POSTS_PER_PAGE
+        url_builder.starting_post_num = post_to_start_with
+
+        # don't mind me, Craigslist. Just doing some normal, non-automated browsing
+        time.sleep(5)
     
     posts.to_json(BIG_FILE)
 
