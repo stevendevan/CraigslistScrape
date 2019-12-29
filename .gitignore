@@ -1,5 +1,9 @@
 run_scrapelist.ps1
 
+# Pycharm stuff
+.idea/
+top
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
