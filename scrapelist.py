@@ -62,7 +62,7 @@ def main():
     while True:
         req = requests.get(URL_BASE + str(post_to_start_with) + URL_SUFFIX)
         soup = BeautifulSoup(req.text, 'html.parser')
-        posts_new = soup.find_all(name='li', attrs={'class': 'result-row'})
+        posts_new = soup.find_all(attrs={'class': 'result-row'})
         if len(posts_new) == 0:
             break
         posts = add_new_posts(posts, posts_new)
